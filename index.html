@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aviral Singh — Antenna & RF Research</title>
+<meta name="description" content="Aviral Singh — antenna design, reconfigurable antennas, and ML-assisted electromagnetics. Publications, patents, and research portfolio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05090d;
+  --panel:#0b1218;
+  --panel-2:#0e161e;
+  --line:#1b2733;
+  --line-bright:#2a3b4a;
+  --cyan:#3fe0d8;
+  --cyan-dim:rgba(63,224,216,.14);
+  --amber:#f2b544;
+  --text:#e8eef4;
+  --muted:#93a3b1;
+  --faint:#5c6b78;
+  --display:'Space Grotesk',sans-serif;
+  --body:'IBM Plex Sans',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --maxw:1080px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:2px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+/* ---------- NAV ---------- */
+nav{position:sticky;top:0;z-index:50;background:rgba(5,9,13,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav-inner{max-width:var(--maxw);margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nav-name{font-family:var(--mono);font-size:13px;letter-spacing:.14em;color:var(--text)}
+.nav-name b{color:var(--cyan);font-weight:500}
+.nav-links{display:flex;gap:22px;flex-wrap:wrap}
+.nav-links a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.nav-links a:hover{color:var(--cyan);text-decoration:none}
+
+/* ---------- HERO ---------- */
+header{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero{max-width:var(--maxw);margin:0 auto;padding:88px 24px 64px;display:grid;grid-template-columns:1.35fr .9fr;gap:48px;align-items:center}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:18px}
+.kicker::before{content:"";display:inline-block;width:26px;height:1px;background:var(--cyan);vertical-align:middle;margin-right:12px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(40px,6vw,64px);line-height:1.03;letter-spacing:-.01em;margin-bottom:20px}
+.hero-sub{color:var(--muted);font-size:17px;max-width:52ch;margin-bottom:30px}
+.hero-sub em{color:var(--text);font-style:normal;font-weight:500}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.08em;padding:12px 22px;border:1px solid var(--cyan);border-radius:3px;transition:background .15s,color .15s}
+.btn.solid{background:var(--cyan);color:#04211f;font-weight:500}
+.btn.solid:hover{background:#63eae3;text-decoration:none}
+.btn.ghost{color:var(--cyan)}
+.btn.ghost:hover{background:var(--cyan-dim);text-decoration:none}
+.hero-viz{display:flex;flex-direction:column;align-items:center;gap:8px}
+.hero-viz svg{width:100%;max-width:340px;height:auto}
+.viz-caption{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--faint);text-transform:uppercase}
+
+/* spectrum ruler */
+.spectrum{max-width:var(--maxw);margin:0 auto;padding:0 24px 52px}
+.spec-label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase;margin-bottom:10px}
+.spec-track{position:relative;height:44px;border:1px solid var(--line);border-radius:3px;background:var(--panel);overflow:hidden}
+.spec-band{position:absolute;top:0;bottom:0;border-left:1px solid var(--line)}
+.spec-band span{position:absolute;top:6px;left:8px;font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.08em}
+.spec-band.active{background:linear-gradient(180deg,var(--cyan-dim),transparent)}
+.spec-band.active span{color:var(--cyan)}
+.spec-band small{position:absolute;bottom:5px;left:8px;font-family:var(--mono);font-size:9.5px;color:var(--faint)}
+
+/* ---------- SECTIONS ---------- */
+section{padding:72px 0;border-bottom:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:38px}
+.sec-head h2{font-family:var(--display);font-size:26px;font-weight:600;letter-spacing:-.01em}
+.sec-head .tag{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase}
+.sec-head::after{content:"";flex:1;height:1px;background:var(--line);align-self:center}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.stat{background:var(--panel);padding:22px 20px}
+.stat .num{font-family:var(--display);font-size:30px;font-weight:700;color:var(--cyan)}
+.stat .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.about-text{color:var(--muted);max-width:74ch;margin-top:28px}
+.about-text strong{color:var(--text);font-weight:500}
+
+/* publication cards */
+.pub{border:1px solid var(--line);border-radius:4px;background:var(--panel);padding:22px 24px;margin-bottom:14px;transition:border-color .15s}
+.pub:hover{border-color:var(--line-bright)}
+.pub-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.pub h3{font-family:var(--display);font-size:17.5px;font-weight:600;line-height:1.35}
+.pub .venue{color:var(--muted);font-size:14px;margin-top:6px;font-style:italic}
+.pub .authors{color:var(--faint);font-size:13.5px;margin-top:4px}
+.pub .authors b{color:var(--muted);font-weight:500}
+.badges{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.badge{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:2px;border:1px solid var(--line-bright);color:var(--muted)}
+.badge.hl{border-color:var(--cyan);color:var(--cyan)}
+.badge.warm{border-color:var(--amber);color:var(--amber)}
+.pub-link{font-family:var(--mono);font-size:12px;white-space:nowrap}
+
+/* timeline (experience) */
+.tl{position:relative;padding-left:28px}
+.tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+.tl-item{position:relative;padding-bottom:34px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:"";position:absolute;left:-28px;top:7px;width:11px;height:11px;border-radius:50%;border:2px solid var(--cyan);background:var(--bg)}
+.tl-item h3{font-family:var(--display);font-size:17px;font-weight:600}
+.tl-item .org{color:var(--cyan);font-size:14px;font-family:var(--mono)}
+.tl-item .when{color:var(--faint);font-family:var(--mono);font-size:12px;margin:2px 0 8px}
+.tl-item p{color:var(--muted);font-size:14.5px;max-width:70ch}
+
+/* grids */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{border:1px solid var(--line);border-radius:4px;background:var(--panel);padding:22px 24px}
+.card h3{font-family:var(--display);font-size:16.5px;font-weight:600;margin-bottom:6px}
+.card .meta{font-family:var(--mono);font-size:11.5px;color:var(--faint);letter-spacing:.06em;margin-bottom:10px}
+.card p{color:var(--muted);font-size:14.5px}
+
+/* skills */
+.skill-groups{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.skill-group{border:1px solid var(--line);border-radius:4px;background:var(--panel);padding:20px 22px}
+.skill-group h3{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;color:var(--text);background:var(--panel-2);border:1px solid var(--line-bright);padding:5px 12px;border-radius:2px}
+
+/* achievements */
+.ach{display:flex;gap:16px;border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:4px;background:var(--panel);padding:20px 24px;margin-bottom:14px}
+.ach .yr{font-family:var(--mono);color:var(--amber);font-size:13px;white-space:nowrap;padding-top:2px}
+.ach p{color:var(--muted);font-size:15px}
+.ach p b{color:var(--text);font-weight:600}
+
+/* contact */
+.contact-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:start}
+.contact-lead{color:var(--muted);font-size:16px;max-width:50ch}
+.contact-list{list-style:none;margin-top:26px}
+.contact-list li{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.contact-list .k{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--faint);text-transform:uppercase;width:88px;flex-shrink:0;padding-top:2px}
+
+footer{padding:34px 24px;text-align:center}
+footer p{font-family:var(--mono);font-size:11.5px;color:var(--faint);letter-spacing:.08em}
+
+/* radiation pattern animation */
+@keyframes sweep{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.sweep-line{transform-origin:170px 170px;animation:sweep 9s linear infinite}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:.9}}
+.lobe{animation:pulse 4.5s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){
+  .sweep-line,.lobe{animation:none}
+  html{scroll-behavior:auto}
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;padding:56px 24px 40px;gap:36px}
+  .hero-viz{order:-1}
+  .hero-viz svg{max-width:230px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid-2,.skill-groups{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .pub-top{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-name"><b>AVIRAL</b>&nbsp;SINGH</div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#publications">Publications</a>
+      <a href="#patents">Patents</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="hero">
+    <div>
+      <div class="kicker" id="hero-kicker"></div>
+      <h1 id="hero-name"></h1>
+      <p class="hero-sub" id="hero-sub"></p>
+      <div class="hero-cta">
+        <a class="btn solid" href="#publications">View research</a>
+        <a class="btn ghost" href="#contact">Get in touch</a>
+      </div>
+    </div>
+    <div class="hero-viz">
+      <!-- Stylised antenna radiation pattern (polar plot) -->
+      <svg viewBox="0 0 340 340" role="img" aria-label="Stylised antenna radiation pattern">
+        <g stroke="#1b2733" fill="none" stroke-width="1">
+          <circle cx="170" cy="170" r="150"/><circle cx="170" cy="170" r="112"/>
+          <circle cx="170" cy="170" r="75"/><circle cx="170" cy="170" r="38"/>
+          <line x1="20" y1="170" x2="320" y2="170"/><line x1="170" y1="20" x2="170" y2="320"/>
+          <line x1="64" y1="64" x2="276" y2="276"/><line x1="276" y1="64" x2="64" y2="276"/>
+        </g>
+        <g font-family="IBM Plex Mono,monospace" font-size="9" fill="#5c6b78">
+          <text x="170" y="14" text-anchor="middle">0°</text>
+          <text x="330" y="174" text-anchor="middle">90°</text>
+          <text x="170" y="334" text-anchor="middle">180°</text>
+          <text x="8" y="174" text-anchor="middle">270°</text>
+          <text x="178" y="60">0</text><text x="178" y="98">-10</text><text x="178" y="136">-20</text>
+        </g>
+        <!-- main + side lobes -->
+        <path class="lobe" d="M170,170 C120,120 130,40 170,22 C210,40 220,120 170,170 Z" fill="rgba(63,224,216,.16)" stroke="#3fe0d8" stroke-width="1.5"/>
+        <path class="lobe" style="animation-delay:1.2s" d="M170,170 C130,180 92,214 96,244 C122,250 160,214 170,170 Z" fill="rgba(63,224,216,.08)" stroke="#3fe0d8" stroke-width="1" opacity=".55"/>
+        <path class="lobe" style="animation-delay:2.4s" d="M170,170 C210,180 248,214 244,244 C218,250 180,214 170,170 Z" fill="rgba(63,224,216,.08)" stroke="#3fe0d8" stroke-width="1" opacity=".55"/>
+        <line class="sweep-line" x1="170" y1="170" x2="170" y2="24" stroke="rgba(63,224,216,.5)" stroke-width="1"/>
+        <circle cx="170" cy="170" r="3.5" fill="#3fe0d8"/>
+      </svg>
+      <div class="viz-caption">E-plane radiation pattern · normalised</div>
+    </div>
+  </div>
+  <div class="spectrum">
+    <div class="spec-label">Frequency bands worked across</div>
+    <div class="spec-track" id="spec-track"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="about">
+  <div class="sec-head"><span class="tag">01</span><h2>About</h2></div>
+  <div class="stats" id="stats"></div>
+  <p class="about-text" id="about-text"></p>
+</section>
+
+<section id="publications">
+  <div class="sec-head"><span class="tag">02</span><h2>Publications</h2></div>
+  <div id="pub-list"></div>
+</section>
+
+<section id="patents">
+  <div class="sec-head"><span class="tag">03</span><h2>Patents</h2></div>
+  <div id="patent-list"></div>
+</section>
+
+<section id="experience">
+  <div class="sec-head"><span class="tag">04</span><h2>Experience &amp; Education</h2></div>
+  <div class="tl" id="timeline"></div>
+</section>
+
+<section id="projects">
+  <div class="sec-head"><span class="tag">05</span><h2>Projects</h2></div>
+  <div class="grid-2" id="project-grid"></div>
+</section>
+
+<section id="skills">
+  <div class="sec-head"><span class="tag">06</span><h2>Technical Skills</h2></div>
+  <div class="skill-groups" id="skill-groups"></div>
+</section>
+
+<section id="achievements">
+  <div class="sec-head"><span class="tag">07</span><h2>Achievements</h2></div>
+  <div id="ach-list"></div>
+</section>
+
+<section id="contact" style="border-bottom:none">
+  <div class="sec-head"><span class="tag">08</span><h2>Contact</h2></div>
+  <div class="contact-grid">
+    <div>
+      <p class="contact-lead" id="contact-lead"></p>
+      <div class="hero-cta" style="margin-top:26px">
+        <a class="btn solid" id="mail-btn" href="#">Email me</a>
+        <a class="btn ghost" id="linkedin-btn" href="#" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <ul class="contact-list" id="contact-list"></ul>
+  </div>
+</section>
+
+</main>
+
+<footer><p id="footer-text"></p></footer>
+
+<script>
+/* ============================================================
+   EDIT YOUR WEBSITE HERE — this object is the entire content.
+   To add a publication, patent, project, etc., copy one of the
+   existing { ... } blocks in the relevant list, paste it below
+   the others, and change the text. Save → commit → done.
+   ============================================================ */
+const SITE = {
+
+  name: "Aviral Singh",
+  kicker: "Antenna Design · Reconfigurable Antennas · ML-Assisted Electromagnetics",
+  heroSub: "Final-year B.Tech student in Electrical & Electronics Engineering at RGIPT, India. I design <em>reconfigurable microwave antennas</em> and build <em>machine-learning pipelines</em> that make electromagnetic design faster — from full-wave simulation to surrogate-assisted optimisation.",
+
+  // Frequency ruler in the hero. "active" bands are highlighted.
+  spectrum: [
+    { band: "S", range: "2–4 GHz", width: 8, active: false },
+    { band: "C", range: "4–8 GHz", width: 17, active: true },
+    { band: "X", range: "8–12 GHz", width: 17, active: true },
+    { band: "Ku", range: "12–18 GHz", width: 25, active: true },
+    { band: "K", range: "18–27 GHz", width: 33, active: true }
+  ],
+
+  stats: [
+    { num: "3", lbl: "Publications" },
+    { num: "1", lbl: "Design patent filed" },
+    { num: "3.9", lbl: "Best journal IF" },
+    { num: "Top 3", lbl: "IEEE WAMS 2026 contest" }
+  ],
+
+  about: "I work at the intersection of <strong>antenna engineering</strong> and <strong>machine learning</strong>. My research spans frequency- and polarisation-reconfigurable patch antennas (PIN diode and varactor based), reconfigurable intelligent surfaces, and surrogate-assisted optimisation — training Gaussian Process, Gradient Boosting and ANN models on full-wave HFSS data, and benchmarking metaheuristics (PSO, GWO, WOA, DE) with rigorous statistical validation. I am currently seeking a <strong>6-month international research internship</strong> (from December 2026) in antennas and applied electromagnetics.",
+
+  publications: [
+    {
+      title: "Metaheuristic-Optimized Bell-Shaped Slotted Pentaband Patch Antenna for C, X, Ku, and K Band Applications",
+      authors: "Mohammad Hannan, <b>Aviral Singh</b> et al.",
+      venue: "Scientific Reports (Nature) — SCI-indexed, Impact Factor 3.9 · March 2026",
+      badges: [ { text: "Journal", hl: true }, { text: "Published", hl: true }, { text: "C / X / Ku / K band" } ],
+      link: ""   // paste the DOI or article URL here, e.g. "https://doi.org/..."
+    },
+    {
+      title: "A Varactor-Loaded 10×10 Reconfigurable Intelligent Surface with Wide Phase Tunability and Beam Tilting for Sub-6 GHz 5G Applications",
+      authors: "Mohammad Hannan, <b>Aviral Singh</b> et al.",
+      venue: "AEUE — International Journal of Electronics and Communications · July 2026",
+      badges: [ { text: "Journal", hl: true }, { text: "Under review", warm: true }, { text: "RIS · Sub-6 GHz 5G" } ],
+      link: ""
+    },
+    {
+      title: "A Slotted Frequency-Reconfigurable Multiband Microstrip Patch Antenna with Parasitic Elements for V2X Applications",
+      authors: "<b>Aviral Singh</b> et al.",
+      venue: "Proc. 4th Int. Conf. on Computer, Electronics, Electrical Engineering and their Applications (IC2E3), NIT Uttarakhand · February 2026",
+      badges: [ { text: "Conference · First author", hl: true }, { text: "Selected among 416 of 1200+" }, { text: "V2X" } ],
+      link: ""
+    }
+  ],
+
+  patents: [
+    {
+      title: "Fan-Shaped Dual-Slotted Microstrip Patch Antenna with PIN Diode",
+      meta: "Indian Design Patent · Application No. 503375-001 · Filed May 2026",
+      desc: "Co-inventors: Saptarshi Ghosh, Mohammad Hannan, Aviral Singh."
+    }
+  ],
+
+  timeline: [
+    {
+      role: "Research Intern",
+      org: "SmartBeam Resonetics (Remote)",
+      when: "Jan – May 2026",
+      desc: "Hands-on training in antenna design and full-wave simulation with Ansys HFSS — parametric modelling, S-parameter and radiation-pattern analysis."
+    },
+    {
+      role: "Intern",
+      org: "Bharat Heavy Electricals Limited, Haridwar",
+      when: "May – Jun 2025",
+      desc: "Ladder logic programming and its application in simple CNC machine control."
+    },
+    {
+      role: "B.Tech, Electrical & Electronics Engineering",
+      org: "Rajiv Gandhi Institute of Petroleum Technology (RGIPT), Jais",
+      when: "2023 – 2027",
+      desc: "Research focus: reconfigurable antennas, RIS, and ML-assisted electromagnetic design."
+    }
+  ],
+
+  projects: [
+    {
+      title: "Surrogate-Assisted Antenna Optimisation Pipeline",
+      meta: "MATLAB · Python · HFSS · 2025 – present",
+      desc: "End-to-end design-of-experiments workflow: Latin Hypercube sampling, batch full-wave simulation, surrogate training (GP, Gradient Boosting, ANN) and metaheuristic optimisation with Wilcoxon statistical testing."
+    },
+    {
+      title: "Air Quality Monitoring System",
+      meta: "Arduino · MQ gas sensors · Embedded C · 2024",
+      desc: "Real-time environmental monitoring measuring CO/smoke concentration with sensor data acquisition and LCD display."
+    },
+    {
+      title: "Sunlight-Tracking Solar Panel System",
+      meta: "ESP32 · Servo motors · LDR sensors · 2024",
+      desc: "Automatic dual-sensor solar tracker with real-time position correction for optimal panel alignment and power generation."
+    }
+  ],
+
+  skills: [
+    { group: "Electromagnetics & Simulation", items: ["Ansys HFSS", "Antenna design", "Reconfigurable antennas", "RIS", "MATLAB Antenna Toolbox"] },
+    { group: "ML & Optimisation", items: ["Surrogate modelling", "Gradient Boosting", "Gaussian Processes", "PSO / GWO / WOA / DE", "Latin Hypercube Sampling"] },
+    { group: "Programming & Tools", items: ["Python", "MATLAB", "C++", "Embedded C", "LTSpice", "Arduino"] }
+  ],
+
+  achievements: [
+    { yr: "2026", text: "<b>Second Runner-Up, Student Design Contest</b> — ranked 3rd among 52 teams nationwide (top 6%) and Travel Grant Awardee at the 5th IEEE Wireless, Antenna & Microwave Symposium (WAMS)." },
+    { yr: "2026", text: "First-author paper <b>selected among 416 papers from 1200+ submissions</b> at IC2E3, NIT Uttarakhand." }
+  ],
+
+  contactLead: "Open to research internships, collaborations and conversations about antennas, reconfigurable RF front-ends, and ML-assisted electromagnetic design.",
+  contact: {
+    email: "singhaviral289@gmail.com",
+    email2: "23ec3014@rgipt.ac.in",
+    phone: "+91-9569332578",
+    linkedin: "https://www.linkedin.com/in/YOUR-LINKEDIN-HERE",   // ← paste your LinkedIn URL
+    location: "Jais / Lucknow, India"
+  }
+};
+
+/* ============================================================
+   RENDERING — you shouldn't need to touch anything below.
+   ============================================================ */
+const $ = id => document.getElementById(id);
+
+$("hero-kicker").textContent = SITE.kicker;
+$("hero-name").textContent = SITE.name;
+$("hero-sub").innerHTML = SITE.heroSub;
+
+/* spectrum ruler */
+let offset = 0;
+$("spec-track").innerHTML = SITE.spectrum.map(b => {
+  const html = `<div class="spec-band ${b.active ? "active" : ""}" style="left:${offset}%;width:${b.width}%">
+    <span>${b.band}</span><small>${b.range}</small></div>`;
+  offset += b.width;
+  return html;
+}).join("");
+
+/* stats */
+$("stats").innerHTML = SITE.stats.map(s =>
+  `<div class="stat"><div class="num">${s.num}</div><div class="lbl">${s.lbl}</div></div>`).join("");
+$("about-text").innerHTML = SITE.about;
+
+/* publications */
+$("pub-list").innerHTML = SITE.publications.map(p => `
+  <article class="pub">
+    <div class="pub-top">
+      <div>
+        <h3>${p.title}</h3>
+        <div class="venue">${p.venue}</div>
+        <div class="authors">${p.authors}</div>
+      </div>
+      ${p.link ? `<a class="pub-link" href="${p.link}" target="_blank" rel="noopener">View ↗</a>` : ""}
+    </div>
+    <div class="badges">${p.badges.map(b =>
+      `<span class="badge ${b.hl ? "hl" : ""} ${b.warm ? "warm" : ""}">${b.text}</span>`).join("")}</div>
+  </article>`).join("");
+
+/* patents */
+$("patent-list").innerHTML = SITE.patents.map(p => `
+  <article class="pub">
+    <h3>${p.title}</h3>
+    <div class="venue">${p.meta}</div>
+    <div class="authors">${p.desc}</div>
+  </article>`).join("");
+
+/* timeline */
+$("timeline").innerHTML = SITE.timeline.map(t => `
+  <div class="tl-item">
+    <h3>${t.role}</h3>
+    <div class="org">${t.org}</div>
+    <div class="when">${t.when}</div>
+    <p>${t.desc}</p>
+  </div>`).join("");
+
+/* projects */
+$("project-grid").innerHTML = SITE.projects.map(p => `
+  <article class="card">
+    <h3>${p.title}</h3>
+    <div class="meta">${p.meta}</div>
+    <p>${p.desc}</p>
+  </article>`).join("");
+
+/* skills */
+$("skill-groups").innerHTML = SITE.skills.map(g => `
+  <div class="skill-group">
+    <h3>${g.group}</h3>
+    <div class="chips">${g.items.map(i => `<span class="chip">${i}</span>`).join("")}</div>
+  </div>`).join("");
+
+/* achievements */
+$("ach-list").innerHTML = SITE.achievements.map(a =>
+  `<div class="ach"><div class="yr">${a.yr}</div><p>${a.text}</p></div>`).join("");
+
+/* contact */
+$("contact-lead").textContent = SITE.contactLead;
+$("mail-btn").href = "mailto:" + SITE.contact.email;
+$("linkedin-btn").href = SITE.contact.linkedin;
+$("contact-list").innerHTML = `
+  <li><span class="k">Email</span><a href="mailto:${SITE.contact.email}">${SITE.contact.email}</a></li>
+  <li><span class="k">Academic</span><a href="mailto:${SITE.contact.email2}">${SITE.contact.email2}</a></li>
+  <li><span class="k">Phone</span><span>${SITE.contact.phone}</span></li>
+  <li><span class="k">LinkedIn</span><a href="${SITE.contact.linkedin}" target="_blank" rel="noopener">Profile ↗</a></li>
+  <li><span class="k">Location</span><span>${SITE.contact.location}</span></li>`;
+
+$("footer-text").textContent = `© ${new Date().getFullYear()} ${SITE.name} · Antennas · Electromagnetics · Machine Learning`;
+</script>
+</body>
+</html>
